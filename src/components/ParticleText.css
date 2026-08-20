@@ -1,0 +1,48 @@
+.particle-text {
+  position: relative;
+  width: min(920px, 92vw);
+  height: clamp(176px, 21vw, 282px);
+}
+
+.particle-text canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.particle-text__fallback {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  color: #fff;
+  font-size: clamp(3rem, 6.3vw, 5.8rem);
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: .9;
+}
+
+.particle-text__semantic {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.particle-text__fallback span,
+.particle-text__semantic span { display: block; }
+
+@media (max-width: 640px) {
+  .particle-text {
+    width: 96vw;
+    height: 210px;
+  }
+}

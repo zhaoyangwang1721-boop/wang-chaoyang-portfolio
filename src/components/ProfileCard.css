@@ -1,0 +1,27 @@
+.profile-card {
+  --profile-x: 50%;
+  --profile-y: 50%;
+  --profile-rotate-x: 0deg;
+  --profile-rotate-y: 0deg;
+  position: relative;
+  overflow: hidden;
+  margin: 0;
+  border: 3px solid rgba(116, 109, 255, .88);
+  border-radius: 26px;
+  background: #050505;
+  box-shadow: 0 0 28px rgba(73, 71, 255, .48), 0 32px 80px rgba(0, 0, 0, .52);
+  transform: perspective(1100px) rotateX(var(--profile-rotate-x)) rotateY(var(--profile-rotate-y));
+  transform-style: preserve-3d;
+  transition: transform 180ms ease, box-shadow 260ms ease;
+}
+
+.profile-card:hover { box-shadow: 0 0 46px rgba(107, 89, 255, .72), 0 42px 100px rgba(0, 0, 0, .62); }
+.profile-card img { width: 100%; height: 100%; object-fit: cover; object-position: center 18%; filter: grayscale(1) contrast(1.1); transform: scale(1.015); }
+.profile-card__shine { position: absolute; inset: 0; background: radial-gradient(360px circle at var(--profile-x) var(--profile-y), rgba(255,255,255,.22), rgba(112,101,255,.08) 34%, transparent 66%); mix-blend-mode: screen; pointer-events: none; }
+.profile-card::after { position: absolute; inset: auto 0 0; height: 38%; background: linear-gradient(transparent, rgba(2,2,5,.9)); content: ""; pointer-events: none; }
+.profile-card figcaption { position: absolute; z-index: 2; right: 22px; bottom: 20px; left: 22px; display: grid; gap: 4px; opacity: 0; transform: translateY(8px); transition: opacity 220ms ease, transform 220ms ease; }
+.profile-card:hover figcaption, .profile-card:focus-within figcaption { opacity: 1; transform: none; }
+.profile-card figcaption span { color: #fff; font-size: 18px; font-weight: 700; }
+.profile-card figcaption small { color: rgba(255,255,255,.68); font-size: 10px; letter-spacing: .12em; }
+
+@media (prefers-reduced-motion: reduce) { .profile-card { transform: none !important; transition: none; } }

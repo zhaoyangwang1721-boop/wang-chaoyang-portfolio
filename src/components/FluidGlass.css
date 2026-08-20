@@ -1,0 +1,4 @@
+.fluid-glass-layer { --glass-x: 50%; --glass-y: 50%; position: absolute; overflow: hidden; pointer-events: none; }
+.fluid-glass-layer canvas { position: absolute !important; inset: 0; width: 100% !important; height: 100% !important; opacity: .58; }
+.fluid-glass-dom-lens { position: absolute; z-index: 2; top: var(--glass-y); left: var(--glass-x); width: clamp(120px, 14vw, 210px); aspect-ratio: 1; border: 1px solid rgba(255,255,255,.34); border-radius: 50%; background: radial-gradient(circle at 34% 28%, rgba(255,255,255,.2), rgba(124,146,255,.06) 42%, rgba(255,102,92,.07) 72%, rgba(255,255,255,.12)); box-shadow: inset 0 0 35px rgba(255,255,255,.14), 0 16px 55px rgba(0,0,0,.28), 0 0 42px rgba(112,128,255,.12); backdrop-filter: blur(3px) saturate(1.3) contrast(1.06); transform: translate(-50%, -50%); }
+@media (max-width: 760px) { .fluid-glass-layer canvas { display: none; } .fluid-glass-dom-lens { width: 112px; backdrop-filter: blur(2px) saturate(1.22); } }

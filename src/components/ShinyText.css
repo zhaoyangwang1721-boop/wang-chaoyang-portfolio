@@ -1,0 +1,5 @@
+.shiny-text { display: inline-block; }
+
+@media (prefers-reduced-motion: reduce) {
+  .shiny-text { background: none !important; color: inherit; -webkit-text-fill-color: currentColor !important; }
+}

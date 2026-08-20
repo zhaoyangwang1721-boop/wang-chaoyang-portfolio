@@ -1,0 +1,145 @@
+.drift-wall {
+  --drift-pointer-x: 0px;
+  --drift-pointer-y: 0px;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+  background: var(--drift-overlay);
+  contain: layout paint;
+}
+
+.drift-wall__stage {
+  position: absolute;
+  inset: -22% -14%;
+  display: grid;
+  place-items: center;
+  perspective: var(--drift-perspective);
+  pointer-events: none;
+}
+
+.drift-wall__plane {
+  display: grid;
+  grid-template-columns: repeat(var(--drift-columns), var(--drift-tile-width));
+  gap: var(--drift-gap);
+  transform:
+    translate3d(var(--drift-pointer-x), var(--drift-pointer-y), calc(var(--drift-depth) * -1))
+    rotateX(var(--drift-tilt))
+    rotateY(var(--drift-turn))
+    rotateZ(var(--drift-roll));
+  transform-style: preserve-3d;
+  transition: transform 350ms cubic-bezier(.22, 1, .36, 1);
+  will-change: transform;
+  pointer-events: auto;
+}
+
+.drift-wall__column {
+  height: 1120px;
+  overflow: hidden;
+  transform: translateZ(var(--drift-column-depth));
+  transform-style: preserve-3d;
+}
+
+.drift-wall__track {
+  display: flex;
+  flex-direction: column;
+  gap: var(--drift-gap);
+  animation-duration: var(--drift-duration);
+  animation-delay: var(--drift-delay);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+.drift-wall__track--up { animation-name: driftWallUp; }
+.drift-wall__track--down { animation-name: driftWallDown; }
+
+.drift-wall__tile {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  width: var(--drift-tile-width);
+  height: var(--drift-tile-height);
+  flex: 0 0 auto;
+  padding: 0;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: var(--drift-radius);
+  background: #111;
+  box-shadow: 0 18px 50px rgba(0,0,0,.34);
+  opacity: calc(1 - var(--drift-dim) * .52);
+  color: #fff;
+  cursor: pointer;
+  transform: translateZ(0);
+  transition: opacity 220ms ease, border-color 220ms ease, box-shadow 220ms ease, transform 260ms cubic-bezier(.22,1,.36,1);
+}
+
+.drift-wall__tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 24%;
+  transition: filter 220ms ease, transform 420ms cubic-bezier(.22,1,.36,1);
+}
+
+.drift-wall__tile span {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 34px 12px 10px;
+  background: linear-gradient(transparent, rgba(0,0,0,.88));
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: .01em;
+  line-height: 1.3;
+  text-align: left;
+}
+
+.drift-wall__tile:hover,
+.drift-wall__tile:focus-visible {
+  z-index: 2;
+  border-color: rgba(255,255,255,.72);
+  box-shadow: 0 24px 70px rgba(0,0,0,.52), 0 0 0 1px rgba(255,107,69,.48);
+  opacity: 1;
+  transform: translateZ(var(--drift-lift)) scale(1.035);
+}
+
+.drift-wall__tile:hover img,
+.drift-wall__tile:focus-visible img { transform: scale(1.055); }
+.drift-wall--grayscale .drift-wall__tile img { filter: grayscale(1); }
+.drift-wall--grayscale .drift-wall__tile:hover img,
+.drift-wall--grayscale .drift-wall__tile:focus-visible img { filter: grayscale(0); }
+.drift-wall--pause:hover .drift-wall__track { animation-play-state: paused; }
+
+.drift-wall__shade {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  background:
+    linear-gradient(90deg, var(--drift-overlay), transparent 14%, transparent 84%, var(--drift-overlay)),
+    linear-gradient(180deg, var(--drift-overlay), transparent var(--drift-fade-top), transparent var(--drift-fade-bottom), var(--drift-overlay));
+  pointer-events: none;
+}
+
+@keyframes driftWallUp {
+  from { transform: translateY(0); }
+  to { transform: translateY(calc(-50% - var(--drift-gap) / 2)); }
+}
+
+@keyframes driftWallDown {
+  from { transform: translateY(calc(-50% - var(--drift-gap) / 2)); }
+  to { transform: translateY(0); }
+}
+
+@media (max-width: 760px) {
+  .drift-wall__stage { inset: -28% -80%; }
+  .drift-wall__plane { transform: translate3d(var(--drift-pointer-x), var(--drift-pointer-y), -90px) rotateX(12deg) rotateY(-9deg); }
+  .drift-wall__tile span { font-size: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drift-wall__track { animation-play-state: paused; }
+  .drift-wall__plane,
+  .drift-wall__tile,
+  .drift-wall__tile img { transition: none; }
+}

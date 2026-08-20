@@ -1,0 +1,28 @@
+.rotating-text {
+  position: relative;
+  display: inline-grid;
+  min-width: 2.1em;
+  overflow: hidden;
+  vertical-align: -.08em;
+}
+
+.rotating-text__word {
+  display: inline-flex;
+  justify-content: center;
+  color: var(--paper);
+  text-shadow: 0 0 30px rgba(255, 91, 47, .22);
+}
+
+.rotating-text__word > span {
+  display: inline-block;
+  animation: rotatingTextCharacter 640ms cubic-bezier(.2, .86, .3, 1) both;
+}
+
+@keyframes rotatingTextCharacter {
+  from { opacity: 0; transform: translateY(105%) rotateX(-70deg); filter: blur(8px); }
+  to { opacity: 1; transform: translateY(0) rotateX(0); filter: blur(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rotating-text__word > span { animation: none; }
+}

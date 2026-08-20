@@ -1,0 +1,69 @@
+.warp-text-wrap {
+  position: relative;
+}
+
+.section-title > .warp-text-wrap {
+  display: block;
+  color: var(--paper);
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+}
+
+.warp-text__filter {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.warp-text {
+  position: relative;
+  isolation: isolate;
+  transform: translateZ(0);
+}
+
+.warp-text::before,
+.warp-text::after {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  overflow: hidden;
+  color: transparent;
+  content: attr(data-text);
+  pointer-events: none;
+  -webkit-text-stroke: 1px currentColor;
+}
+
+.warp-text::before {
+  color: rgba(112, 72, 255, .38);
+  clip-path: inset(18% 0 58% 0);
+  animation: warpTextSliceA 3.7s steps(1, end) infinite;
+}
+
+.warp-text::after {
+  color: rgba(255, 92, 52, .3);
+  clip-path: inset(63% 0 16% 0);
+  animation: warpTextSliceB 4.3s steps(1, end) infinite;
+}
+
+@keyframes warpTextSliceA {
+  0%, 82%, 100% { transform: translate(0, 0); }
+  84% { transform: translate(7px, -2px) skewX(-2deg); }
+  88% { transform: translate(-4px, 1px); }
+  92% { transform: translate(3px, 0); }
+}
+
+@keyframes warpTextSliceB {
+  0%, 72%, 100% { transform: translate(0, 0); }
+  75% { transform: translate(-6px, 2px) skewX(2deg); }
+  80% { transform: translate(4px, -1px); }
+  85% { transform: translate(-2px, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .warp-text { filter: none !important; }
+  .warp-text::before,
+  .warp-text::after { display: none; animation: none; }
+}

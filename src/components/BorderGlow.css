@@ -1,0 +1,43 @@
+.border-glow {
+  --border-glow-x: 50%;
+  --border-glow-y: 50%;
+  --border-glow-opacity: .46;
+  position: relative;
+  border-radius: var(--border-glow-radius);
+  background: var(--border-glow-bg);
+  isolation: isolate;
+}
+
+.border-glow__edge {
+  position: absolute;
+  z-index: 2;
+  inset: -3px;
+  border: 3px solid transparent;
+  border-radius: calc(var(--border-glow-radius) + 3px);
+  background:
+    radial-gradient(
+      calc(var(--border-glow-size) * 4) circle at var(--border-glow-x) var(--border-glow-y),
+      var(--border-glow-a) 0,
+      var(--border-glow-b) var(--border-glow-cone),
+      var(--border-glow-c) 58%,
+      transparent 72%
+    ) border-box;
+  box-shadow:
+    0 0 calc(var(--border-glow-size) * .72) rgb(var(--border-glow-color) / calc(.32 * var(--border-glow-intensity))),
+    inset 0 0 calc(var(--border-glow-size) * .42) rgb(var(--border-glow-color) / calc(.2 * var(--border-glow-intensity)));
+  opacity: var(--border-glow-opacity);
+  pointer-events: none;
+  transition: opacity 240ms ease;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.border-glow__content { position: relative; z-index: 1; overflow: hidden; border-radius: inherit; }
+.border-glow--animated .border-glow__edge { animation: borderGlowPulse 3.8s ease-in-out infinite alternate; }
+
+@keyframes borderGlowPulse { to { opacity: 1; filter: hue-rotate(28deg) brightness(1.18); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .border-glow--animated .border-glow__edge { animation: none; }
+}

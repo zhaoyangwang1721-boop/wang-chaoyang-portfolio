@@ -1,0 +1,59 @@
+.text-pressure {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+
+.text-pressure-title {
+  display: block;
+  width: 100%;
+  margin: 0;
+  color: var(--text-pressure-color);
+  font-weight: 320;
+  letter-spacing: -.055em;
+  text-align: center;
+  text-transform: uppercase;
+  transform-origin: center;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.text-pressure-title.is-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.text-pressure-title.is-wrapping {
+  white-space: normal;
+}
+
+.text-pressure-title > span {
+  display: inline-block;
+  color: var(--text-pressure-color);
+  transform-origin: center;
+  will-change: transform, opacity, font-variation-settings;
+}
+
+.text-pressure-title.has-stroke > span {
+  position: relative;
+  color: var(--text-pressure-color);
+}
+
+.text-pressure-title.has-stroke > span::after {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  color: transparent;
+  content: attr(data-char);
+  -webkit-text-stroke: 2px var(--text-pressure-stroke);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .text-pressure-title > span {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

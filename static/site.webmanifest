@@ -1,0 +1,18 @@
+{
+  "name": "王朝阳个人作品集",
+  "short_name": "王朝阳",
+  "description": "AI时代传播增长顾问｜影视产业专家",
+  "lang": "zh-CN",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#070707",
+  "theme_color": "#070707",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

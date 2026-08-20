@@ -1,0 +1,25 @@
+.scroll-velocity,
+.scroll-velocity__parallax {
+  position: relative;
+  overflow: hidden;
+}
+
+.scroll-velocity__scroller {
+  display: flex;
+  width: max-content;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.scroll-velocity__scroller > span {
+  flex-shrink: 0;
+}
+
+.scroll-velocity__spacer {
+  display: inline-block;
+  width: .5em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-velocity__scroller { transform: none !important; }
+}

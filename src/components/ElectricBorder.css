@@ -1,0 +1,50 @@
+.electric-border {
+  position: relative;
+  border-radius: var(--electric-radius);
+  isolation: isolate;
+}
+
+.electric-border__svg {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.electric-border__glow,
+.electric-border__line {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  border: var(--electric-thickness) solid var(--electric-color);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.electric-border__glow {
+  inset: -2px;
+  opacity: .82;
+  box-shadow:
+    0 0 8px color-mix(in srgb, var(--electric-color) 80%, transparent),
+    0 0 22px color-mix(in srgb, var(--electric-color) 48%, transparent),
+    inset 0 0 12px color-mix(in srgb, var(--electric-color) 22%, transparent);
+  animation: electricBorderPulse var(--electric-speed) steps(2, end) infinite;
+}
+
+.electric-border__line {
+  border-width: 1px;
+  opacity: .78;
+  box-shadow: inset 0 0 8px color-mix(in srgb, var(--electric-color) 34%, transparent);
+}
+
+@keyframes electricBorderPulse {
+  0%, 100% { opacity: .58; transform: scale(1); }
+  18% { opacity: .95; }
+  44% { opacity: .7; transform: scale(1.002); }
+  67% { opacity: 1; }
+  82% { opacity: .64; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .electric-border__glow { animation: none; opacity: .72; filter: none !important; }
+}

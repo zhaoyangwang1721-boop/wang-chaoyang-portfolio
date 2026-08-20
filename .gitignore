@@ -1,0 +1,10 @@
+.DS_Store
+node_modules/
+dist/
+qa/
+design/
+agent_memory/
+*.log
+.env
+.env.*
+!.env.example

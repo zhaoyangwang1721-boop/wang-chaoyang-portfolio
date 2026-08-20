@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1274" viewBox="0 0 900 1274">
+  <defs>
+    <linearGradient id="surface" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#22222b"/>
+      <stop offset="0.42" stop-color="#09090d"/>
+      <stop offset="1" stop-color="#15131a"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.22" cy="0.18" r="0.7">
+      <stop offset="0" stop-color="#8365ff" stop-opacity="0.38"/>
+      <stop offset="0.48" stop-color="#442a8b" stop-opacity="0.08"/>
+      <stop offset="1" stop-color="#09090d" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="edge" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e8e4ff" stop-opacity="0.72"/>
+      <stop offset="0.4" stop-color="#6d657f" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#f5f0ff" stop-opacity="0.42"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="1274" rx="72" fill="url(#surface)"/>
+  <rect width="900" height="1274" rx="72" fill="url(#glow)"/>
+  <rect x="3" y="3" width="894" height="1268" rx="69" fill="none" stroke="url(#edge)" stroke-width="6"/>
+  <rect x="348" y="48" width="204" height="46" rx="23" fill="#050507" stroke="#777180" stroke-width="3"/>
+  <circle cx="156" cy="240" r="66" fill="#171224" stroke="#7a67c7" stroke-opacity="0.45" stroke-width="3"/>
+  <g transform="translate(156 240)" stroke="#9a83ff" stroke-width="12" stroke-linecap="round">
+    <path d="M0-36V36M-31-18L31 18M31-18L-31 18"/>
+    <path d="M0-36L-10-25M0-36L10-25M0 36L-10 25M0 36L10 25M-31-18L-17-20M-31-18L-24-5M31 18L17 20M31 18L24 5M31-18L17-20M31-18L24-5M-31 18L-17 20M-31 18L-24 5"/>
+  </g>
+  <text x="94" y="472" fill="#f6f2ec" font-family="PingFang SC, Noto Sans SC, Microsoft YaHei, sans-serif" font-size="76" font-weight="700">企业 AI 内容体系</text>
+  <rect x="94" y="540" width="116" height="8" rx="4" fill="#8d74ff"/>
+  <g fill="#bbb6c0" font-family="PingFang SC, Noto Sans SC, Microsoft YaHei, sans-serif" font-size="39" font-weight="400">
+    <text x="94" y="668">构建企业专属内容引擎</text>
+    <text x="94" y="746">让内容生产分发沉淀复用</text>
+    <text x="94" y="824">形成持续增长的数字资产</text>
+  </g>
+  <line x1="94" y1="980" x2="806" y2="980" stroke="#ffffff" stroke-opacity="0.12" stroke-width="2"/>
+  <text x="94" y="1060" fill="#77727e" font-family="Arial, sans-serif" font-size="25" letter-spacing="6">AI CONTENT SYSTEM</text>
+  <text x="94" y="1124" fill="#f06b48" font-family="Arial, sans-serif" font-size="28" font-weight="700">WANG CHAOYANG</text>
+</svg>

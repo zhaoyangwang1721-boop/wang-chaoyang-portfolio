@@ -1,0 +1,81 @@
+.flowing-menu { position: relative; }
+
+.flowing-menu__item {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  outline: none;
+  transition: border-color 260ms ease, color 260ms ease;
+}
+
+.flowing-menu__item > .flowing-menu__index,
+.flowing-menu__item > h3,
+.flowing-menu__item > p {
+  position: relative;
+  z-index: 2;
+  transition: color 260ms ease, transform 420ms cubic-bezier(.22, .8, .24, 1);
+}
+
+.flowing-menu__marquee {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: rgba(232, 76, 41, .94);
+  opacity: 0;
+  transform: translateY(104%);
+  transition: transform 460ms cubic-bezier(.2, .84, .25, 1), opacity 240ms ease;
+}
+
+.flowing-menu__track {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  animation: flowingMenuTrack 12s linear infinite;
+  will-change: transform;
+}
+
+.flowing-menu__track span {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: baseline;
+  gap: 18px;
+  padding-right: 54px;
+  color: rgba(7, 7, 10, .18);
+  font-size: clamp(48px, 5.2vw, 82px);
+  font-family: "Noto Serif SC", "Songti SC", STSong, serif;
+  font-weight: 600;
+  letter-spacing: .025em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.flowing-menu__track b { font-size: .54em; font-weight: 430; }
+
+.flowing-menu__item:is(:hover, :focus-visible) .flowing-menu__marquee {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.flowing-menu__item:is(:hover, :focus-visible) > .flowing-menu__index,
+.flowing-menu__item:is(:hover, :focus-visible) > h3 { color: #09090b; transform: translateX(8px); }
+.flowing-menu__item:is(:hover, :focus-visible) > p { color: rgba(9, 9, 11, .72); transform: translateX(8px); }
+
+@keyframes flowingMenuTrack {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-20%, 0, 0); }
+}
+
+@media (max-width: 767px) {
+  .flowing-menu__track span { gap: 12px; padding-right: 34px; font-size: 54px; }
+  .flowing-menu__item:is(:hover, :focus-visible) > .flowing-menu__index,
+  .flowing-menu__item:is(:hover, :focus-visible) > h3,
+  .flowing-menu__item:is(:hover, :focus-visible) > p { transform: translateX(4px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flowing-menu__track { animation: none; }
+  .flowing-menu__marquee { transition: opacity 180ms ease; transform: none; }
+}
