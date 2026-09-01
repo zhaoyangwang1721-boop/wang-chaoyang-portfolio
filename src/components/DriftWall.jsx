@@ -3,6 +3,15 @@ import "./DriftWall.css";
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
+function StaticPosterTile({ item, index, onItemClick }) {
+  return (
+    <button className="drift-wall-static__tile" type="button" aria-label={`查看《${item.title}》项目海报`} onClick={(event) => onItemClick?.(item, index, event)}>
+      <img src={item.image} alt="" loading="lazy" decoding="async" />
+      <span className="drift-wall-static__label">{item.title}</span>
+    </button>
+  );
+}
+
 export default function DriftWall({
   items = [],
   columns = 5,
@@ -25,6 +34,7 @@ export default function DriftWall({
   roll = 0,
   pauseOnHover = false,
   grayscale = false,
+  staticMode = false,
   onItemClick,
   className = ""
 }) {
@@ -71,7 +81,37 @@ export default function DriftWall({
     };
   }, [parallax]);
 
+  useEffect(() => {
+    const wall = wallRef.current;
+    if (!wall || staticMode) return undefined;
+    const observer = new IntersectionObserver(([entry]) => {
+      wall.classList.toggle("drift-wall--active", entry.isIntersecting && !document.hidden);
+    });
+    const handleVisibilityChange = () => {
+      const rect = wall.getBoundingClientRect();
+      const visible = !document.hidden && rect.bottom > 0 && rect.top < window.innerHeight;
+      wall.classList.toggle("drift-wall--active", visible);
+    };
+    observer.observe(wall);
+    window.addEventListener("scroll", handleVisibilityChange, { passive: true });
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    handleVisibilityChange();
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", handleVisibilityChange);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [staticMode]);
+
   if (!items.length) return null;
+
+  if (staticMode) {
+    return (
+      <div className={`drift-wall-static ${className}`.trim()} role="region" aria-label="电影项目静态作品墙">
+        {items.map((item, index) => <StaticPosterTile item={item} index={index} key={item.id ?? item.title} onItemClick={onItemClick} />)}
+      </div>
+    );
+  }
 
   const baseDuration = Math.max(18, (items.length * (tileHeight + gap)) / Math.max(1, speed));
   const styles = {

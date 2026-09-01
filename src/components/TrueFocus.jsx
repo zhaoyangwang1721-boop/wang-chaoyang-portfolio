@@ -17,10 +17,19 @@ export default function TrueFocus({
   const rootRef = useRef(null);
   const itemRefs = useRef([]);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
   const [frame, setFrame] = useState({ left: 0, top: 0, width: 0, height: 0, ready: false });
 
   useEffect(() => {
-    if (manualMode || words.length < 2) return undefined;
+    const root = rootRef.current;
+    if (!root) return undefined;
+    const observer = new IntersectionObserver(([entry]) => setIsVisible(entry.isIntersecting && !document.hidden));
+    observer.observe(root);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (manualMode || words.length < 2 || !isVisible) return undefined;
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     if (media.matches) return undefined;
     const timer = window.setInterval(
@@ -28,7 +37,7 @@ export default function TrueFocus({
       (animationDuration + pauseBetweenAnimations) * 1000
     );
     return () => window.clearInterval(timer);
-  }, [animationDuration, manualMode, pauseBetweenAnimations, words.length]);
+  }, [animationDuration, isVisible, manualMode, pauseBetweenAnimations, words.length]);
 
   useEffect(() => {
     const root = rootRef.current;

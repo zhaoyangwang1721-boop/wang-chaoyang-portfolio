@@ -89,6 +89,54 @@ function useReveal() {
   }, []);
 }
 
+function useMediaQuery(query) {
+  const [matches, setMatches] = useState(() => window.matchMedia(query).matches);
+
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    const handleChange = () => setMatches(media.matches);
+    handleChange();
+    media.addEventListener("change", handleChange);
+    return () => media.removeEventListener("change", handleChange);
+  }, [query]);
+
+  return matches;
+}
+
+function usePauseOffscreenAnimations() {
+  useEffect(() => {
+    const sections = [...document.querySelectorAll(".lithos-hero, #main-content > section")];
+    let frame = 0;
+    const sync = () => {
+      frame = 0;
+      sections.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        section.classList.toggle("is-offscreen", rect.bottom <= 0 || rect.top >= window.innerHeight || document.hidden);
+      });
+    };
+    const scheduleSync = () => {
+      if (!frame) frame = requestAnimationFrame(sync);
+    };
+    const observer = new IntersectionObserver(scheduleSync);
+    sections.forEach((section) => {
+      section.classList.add("is-offscreen");
+      observer.observe(section);
+    });
+    window.addEventListener("scroll", scheduleSync, { passive: true });
+    window.addEventListener("resize", scheduleSync);
+    document.addEventListener("visibilitychange", scheduleSync);
+    sync();
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      window.removeEventListener("scroll", scheduleSync);
+      window.removeEventListener("resize", scheduleSync);
+      document.removeEventListener("visibilitychange", scheduleSync);
+      sections.forEach((section) => section.classList.remove("is-offscreen"));
+    };
+  }, []);
+}
+
 const portfolioLinks = [...navItems, { label: "联系", href: "#contact" }];
 const BG_IMAGE_1 = "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260609_195923_b0ba8ace-1d1d-4f2c-9a28-1ab84b330680.png&w=1280&q=85";
 const BG_IMAGE_2 = "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260609_201152_bba90a12-bf12-459f-91f0-51f237dbaf3b.png&w=1280&q=85";
@@ -221,34 +269,57 @@ function LithosNavigation() {
   );
 }
 
-function Hero() {
+function Hero({ isMobileLite }) {
+  const heroRef = useRef(null);
   const mouse = useRef({ x: -999, y: -999 });
   const smooth = useRef({ x: -999, y: -999 });
   const rafRef = useRef(null);
   const [cursorPos, setCursorPos] = useState({ x: -999, y: -999 });
 
   useEffect(() => {
+    const hero = heroRef.current;
+    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+    if (!hero || !finePointer.matches) return undefined;
+
+    let visible = false;
     const handleMouseMove = (event) => {
       mouse.current = { x: event.clientX, y: event.clientY };
     };
 
     const animate = () => {
+      if (!visible) return;
       smooth.current.x += (mouse.current.x - smooth.current.x) * 0.1;
       smooth.current.y += (mouse.current.y - smooth.current.y) * 0.1;
       setCursorPos({ x: smooth.current.x, y: smooth.current.y });
       rafRef.current = requestAnimationFrame(animate);
     };
 
+    const observer = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting && !document.hidden;
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = visible ? requestAnimationFrame(animate) : null;
+    });
+    const handleVisibilityChange = () => {
+      const rect = hero.getBoundingClientRect();
+      visible = !document.hidden && rect.bottom > 0 && rect.top < window.innerHeight;
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = visible ? requestAnimationFrame(animate) : null;
+    };
+
     window.addEventListener("mousemove", handleMouseMove);
-    rafRef.current = requestAnimationFrame(animate);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    observer.observe(hero);
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      observer.disconnect();
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, []);
 
   return (
     <section
+      ref={heroRef}
       className="lithos-hero relative w-full overflow-hidden h-screen tracking-[-0.02em]"
       id="home"
       data-cursor="home"
@@ -259,7 +330,7 @@ function Hero() {
         style={{ backgroundImage: `url("${BG_IMAGE_1}")` }}
         aria-hidden="true"
       />
-      <RevealLayer image={BG_IMAGE_2} cursorX={cursorPos.x} cursorY={cursorPos.y} />
+      {!isMobileLite ? <RevealLayer image={BG_IMAGE_2} cursorX={cursorPos.x} cursorY={cursorPos.y} /> : null}
       <LithosNavigation />
 
       <div className="absolute top-[14%] left-0 right-0 z-50 flex flex-col items-center px-5 text-center pointer-events-none">
@@ -508,7 +579,7 @@ function About() {
   );
 }
 
-function Statement() {
+function Statement({ isMobileLite }) {
   const methodSteps = [
     {
       icon: Brain,
@@ -540,9 +611,11 @@ function Statement() {
 
   return (
     <section className="section statement method" id="method" data-cursor="method">
-      <div className="method-shape-blur" aria-hidden="true">
-        <ShapeBlur variation={1} pixelRatio={1} />
-      </div>
+      {!isMobileLite ? (
+        <div className="method-shape-blur" aria-hidden="true">
+          <ShapeBlur variation={1} pixelRatio={1} />
+        </div>
+      ) : null}
       <div className="shell method-layout">
         <h2 className="method-chrome-title" data-reveal="text">
           <span>从电影判断</span>
@@ -588,7 +661,7 @@ function Statement() {
         <div className="method-media" data-reveal="media">
           <figure className="method-artifact">
             <img src={assetUrl("images/visuals/method-emotion-form.png")} alt="粉蓝色半透明软体装置" width="1586" height="992" loading="lazy" />
-            <div className="method-magic-rings"><MagicRings /></div>
+            {!isMobileLite ? <div className="method-magic-rings"><MagicRings /></div> : null}
             <figcaption>找到值得说的事</figcaption>
           </figure>
           <div id="method-panel" role="tabpanel" className="method-evidence" tabIndex="0" key={methodSteps[activeMethod].title}>
@@ -625,7 +698,7 @@ function Statement() {
   );
 }
 
-function Projects() {
+function Projects({ isMobileLite }) {
   const [lightboxIndex, setLightboxIndex] = useState(null);
   const closeLightbox = useCallback(() => setLightboxIndex(null), []);
   const moveLightbox = useCallback((direction) => {
@@ -634,7 +707,7 @@ function Projects() {
 
   return (
     <section className="section projects" id="projects" data-cursor="projects">
-      <FluidGlass className="projects-fluid-glass" scale={0.72} ior={1.18} thickness={2.8} chromaticAberration={0.08} />
+      {!isMobileLite ? <FluidGlass className="projects-fluid-glass" scale={0.72} ior={1.18} thickness={2.8} chromaticAberration={0.08} /> : null}
       <div className="shell projects-layout">
         <div className="project-accordion-intro" data-reveal>
           <SectionTitle
@@ -664,6 +737,7 @@ function Projects() {
         <div className="projects-drift-wall" data-reveal="collection">
           <DriftWall
             items={driftWallItems}
+            staticMode={isMobileLite}
             columns={5}
             tileWidth={200}
             tileHeight={132}
@@ -696,7 +770,7 @@ function Projects() {
   );
 }
 
-function Services() {
+function Services({ isMobileLite }) {
   const aiContentFlow = [
     ["01", "品牌知识库", "品牌规范 产品资料 内容资产"],
     ["02", "目标与洞察", "业务目标 受众情绪 渠道信号"],
@@ -725,7 +799,7 @@ function Services() {
       <BorderGlow className="shell section-master-visual services-master-visual" borderRadius={18} glowRadius={56} glowIntensity={1.65}>
       <figure data-reveal="media">
         <img src={assetUrl("images/visuals/services-master-visual.png")} alt="增长服务系统主视觉" width="1707" height="960" loading="lazy" />
-        <div className="enterprise-ai-shape-frame" aria-hidden="true"><ShapeBlur variation={1} pixelRatio={1} /></div>
+        {!isMobileLite ? <div className="enterprise-ai-shape-frame" aria-hidden="true"><ShapeBlur variation={1} pixelRatio={1} /></div> : null}
         <BorderGlow
           className="enterprise-ai-flow-glow"
           edgeSensitivity={80}
@@ -815,32 +889,38 @@ function Contact() {
 
 function App() {
   useReveal();
+  usePauseOffscreenAnimations();
+  const isMobileLite = useMediaQuery("(max-width: 760px), (hover: none) and (pointer: coarse)");
   return <>
     <a className="skip-link" href="#main-content">跳至主要内容</a>
-    <SplashCursor
-      SIM_RESOLUTION={96}
-      DYE_RESOLUTION={720}
-      DENSITY_DISSIPATION={3.8}
-      VELOCITY_DISSIPATION={2.2}
-      CURL={4}
-      SPLAT_RADIUS={0.16}
-      SPLAT_FORCE={4200}
-      COLOR_UPDATE_SPEED={7}
-      TRANSPARENT
-      RAINBOW_MODE
-    />
-    <div className="site-ballpit-background" aria-hidden="true">
-      <Ballpit
-        count={100}
-        gravity={0.01}
-        friction={0.9975}
-        wallBounce={0.95}
-        followCursor={false}
+    {!isMobileLite ? (
+      <SplashCursor
+        SIM_RESOLUTION={96}
+        DYE_RESOLUTION={720}
+        DENSITY_DISSIPATION={3.8}
+        VELOCITY_DISSIPATION={2.2}
+        CURL={4}
+        SPLAT_RADIUS={0.16}
+        SPLAT_FORCE={4200}
+        COLOR_UPDATE_SPEED={7}
+        TRANSPARENT
+        RAINBOW_MODE
       />
+    ) : null}
+    <div className={`site-ballpit-background${isMobileLite ? " site-ballpit-background--static" : ""}`} aria-hidden="true">
+      {!isMobileLite ? (
+        <Ballpit
+          count={100}
+          gravity={0.01}
+          friction={0.9975}
+          wallBounce={0.95}
+          followCursor={false}
+        />
+      ) : null}
     </div>
-    <Hero />
+    <Hero isMobileLite={isMobileLite} />
     <PortfolioRail />
-    <main id="main-content"><About /><Statement /><Projects /><Services /><Contact /></main>
+    <main id="main-content"><About /><Statement isMobileLite={isMobileLite} /><Projects isMobileLite={isMobileLite} /><Services isMobileLite={isMobileLite} /><Contact /></main>
   </>;
 }
 

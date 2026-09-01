@@ -12,6 +12,8 @@ export default function ShapeBlur({ className = "", variation = 0, pixelRatio = 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const pointer = { x: 0.5, y: 0.5 };
     let frame = 0;
+    let intersecting = false;
+    let visible = false;
     let width = 0;
     let height = 0;
 
@@ -39,6 +41,7 @@ export default function ShapeBlur({ className = "", variation = 0, pixelRatio = 
     };
 
     const render = (time = 0) => {
+      if (!visible) return;
       context.clearRect(0, 0, width, height);
       context.globalCompositeOperation = "screen";
       shapes.forEach((shape, index) => {
@@ -59,16 +62,37 @@ export default function ShapeBlur({ className = "", variation = 0, pixelRatio = 
       if (!reducedMotion) frame = requestAnimationFrame(render);
     };
 
+    const syncVisibility = () => {
+      visible = intersecting && !document.hidden;
+      cancelAnimationFrame(frame);
+      if (visible) render();
+    };
+
     resize();
-    render();
     const observer = new ResizeObserver(resize);
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
+      intersecting = entry.isIntersecting;
+      syncVisibility();
+    });
     observer.observe(canvas);
+    const syncFromViewport = () => {
+      const rect = canvas.getBoundingClientRect();
+      intersecting = rect.bottom > 0 && rect.top < window.innerHeight;
+      syncVisibility();
+    };
+    visibilityObserver.observe(canvas);
     canvas.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("scroll", syncFromViewport, { passive: true });
+    document.addEventListener("visibilitychange", syncFromViewport);
+    syncFromViewport();
 
     return () => {
       cancelAnimationFrame(frame);
       observer.disconnect();
+      visibilityObserver.disconnect();
       canvas.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("scroll", syncFromViewport);
+      document.removeEventListener("visibilitychange", syncFromViewport);
     };
   }, [pixelRatio, variation]);
 

@@ -50,11 +50,13 @@
   animation-delay: var(--drift-delay);
   animation-timing-function: linear;
   animation-iteration-count: infinite;
+  animation-play-state: paused;
   will-change: transform;
 }
 
 .drift-wall__track--up { animation-name: driftWallUp; }
 .drift-wall__track--down { animation-name: driftWallDown; }
+.drift-wall--active .drift-wall__track { animation-play-state: running; }
 
 .drift-wall__tile {
   position: relative;
@@ -110,6 +112,55 @@
 .drift-wall--grayscale .drift-wall__tile:hover img,
 .drift-wall--grayscale .drift-wall__tile:focus-visible img { filter: grayscale(0); }
 .drift-wall--pause:hover .drift-wall__track { animation-play-state: paused; }
+
+.drift-wall-static {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 16px;
+  background: linear-gradient(180deg, rgba(11, 8, 20, .96), rgba(5, 4, 10, .98));
+}
+
+.drift-wall-static__tile {
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+  aspect-ratio: 2 / 3;
+  padding: 0;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 12px;
+  background: #111018;
+  color: #fff;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 248px;
+  text-align: left;
+}
+
+.drift-wall-static__tile img,
+.drift-wall-static__placeholder {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.drift-wall-static__tile img { object-fit: cover; object-position: center; }
+.drift-wall-static__placeholder { background: linear-gradient(135deg, #171421, #0a0910 60%, #20131b); }
+.drift-wall-static__label {
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 46px 12px 12px;
+  background: linear-gradient(transparent, rgba(0,0,0,.92));
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.drift-wall-static__tile:focus-visible { outline: 2px solid #ff6843; outline-offset: 2px; }
 
 .drift-wall__shade {
   position: absolute;

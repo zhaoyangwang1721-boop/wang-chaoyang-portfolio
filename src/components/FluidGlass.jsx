@@ -2,7 +2,7 @@
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment, Lightformer, MeshTransmissionMaterial } from "@react-three/drei";
 import { easing } from "maath";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./FluidGlass.css";
 
 const DEFAULT_MATERIAL = {
@@ -63,6 +63,29 @@ export default function FluidGlass({
   anisotropy
 }) {
   const rootRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return undefined;
+    const observer = new IntersectionObserver(([entry]) => setIsVisible(entry.isIntersecting && !document.hidden));
+    const handleVisibilityChange = () => {
+      const rect = root.getBoundingClientRect();
+      setIsVisible(!document.hidden && rect.bottom > 0 && rect.top < window.innerHeight);
+    };
+    observer.observe(root);
+    window.addEventListener("scroll", handleVisibilityChange, { passive: true });
+    window.addEventListener("resize", handleVisibilityChange);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    handleVisibilityChange();
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", handleVisibilityChange);
+      window.removeEventListener("resize", handleVisibilityChange);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
   useEffect(() => {
     const root = rootRef.current;
     const section = root?.parentElement;
@@ -93,19 +116,21 @@ export default function FluidGlass({
   return (
     <div ref={rootRef} className={`fluid-glass-layer ${className}`.trim()} aria-hidden="true">
       <div className="fluid-glass-dom-lens" />
-      <Canvas
-        camera={{ position: [0, 0, 7], fov: 32 }}
-        dpr={[1, 1.35]}
-        gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
-      >
-        <ambientLight intensity={0.4} />
-        <Environment resolution={96}>
-          <Lightformer form="ring" color="#ffffff" intensity={4} scale={3} position={[0, 1, 4]} />
-          <Lightformer form="rect" color="#7f8cff" intensity={3} scale={[5, 1, 1]} position={[-3, -1, 2]} />
-          <Lightformer form="rect" color="#ff6d91" intensity={2} scale={[4, 1, 1]} position={[3, 2, 1]} />
-        </Environment>
-        <Lens scale={lensScale} materialProps={materialProps} />
-      </Canvas>
+      {isVisible ? (
+        <Canvas
+          camera={{ position: [0, 0, 7], fov: 32 }}
+          dpr={[1, 1.35]}
+          gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
+        >
+          <ambientLight intensity={0.4} />
+          <Environment resolution={96}>
+            <Lightformer form="ring" color="#ffffff" intensity={4} scale={3} position={[0, 1, 4]} />
+            <Lightformer form="rect" color="#7f8cff" intensity={3} scale={[5, 1, 1]} position={[-3, -1, 2]} />
+            <Lightformer form="rect" color="#ff6d91" intensity={2} scale={[4, 1, 1]} position={[3, 2, 1]} />
+          </Environment>
+          <Lens scale={lensScale} materialProps={materialProps} />
+        </Canvas>
+      ) : null}
     </div>
   );
 }

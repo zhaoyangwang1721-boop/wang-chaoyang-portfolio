@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   motion,
   useAnimationFrame,
@@ -36,6 +36,7 @@ function VelocityText({
   stiffness,
   numCopies,
   velocityMapping,
+  isActive,
   parallaxClassName,
   scrollerClassName
 }) {
@@ -60,7 +61,7 @@ function VelocityText({
   });
 
   useAnimationFrame((_, delta) => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!isActive || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const factor = velocityFactor.get();
     if (factor < 0) directionFactor.current = -1;
     if (factor > 0) directionFactor.current = 1;
@@ -93,8 +94,19 @@ export default function ScrollVelocity({
   parallaxClassName = "scroll-velocity__parallax",
   scrollerClassName = "scroll-velocity__scroller"
 }) {
+  const rootRef = useRef(null);
+  const [isActive, setIsActive] = useState(false);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return undefined;
+    const observer = new IntersectionObserver(([entry]) => setIsActive(entry.isIntersecting && !document.hidden));
+    observer.observe(root);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="scroll-velocity">
+    <div ref={rootRef} className="scroll-velocity">
       {texts.map((text, index) => (
         <VelocityText
           key={text}
@@ -104,6 +116,7 @@ export default function ScrollVelocity({
           stiffness={stiffness}
           numCopies={numCopies}
           velocityMapping={velocityMapping}
+          isActive={isActive}
           parallaxClassName={parallaxClassName}
           scrollerClassName={scrollerClassName}
         >

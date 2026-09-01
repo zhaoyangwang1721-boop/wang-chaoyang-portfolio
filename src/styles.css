@@ -44,6 +44,9 @@ svg { display: block; width: 20px; fill: none; stroke: currentColor; stroke-line
 section[id] { scroll-margin-top: 86px; }
 h1, h2, h3 { text-wrap: balance; }
 p { text-wrap: pretty; }
+.is-offscreen *,
+.is-offscreen *::before,
+.is-offscreen *::after { animation-play-state: paused !important; }
 
 .font-playfair { font-family: "Playfair Display", serif; }
 .site-ballpit-background {
@@ -63,6 +66,12 @@ p { text-wrap: pretty; }
     radial-gradient(circle at 50% 45%, rgba(0,0,0,.02) 0 20%, rgba(0,0,0,.2) 68%, rgba(0,0,0,.6) 100%),
     linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.28));
   content: "";
+}
+.site-ballpit-background--static {
+  background:
+    radial-gradient(circle at 18% 24%, rgba(104, 84, 176, .22), transparent 34%),
+    radial-gradient(circle at 82% 58%, rgba(181, 76, 114, .16), transparent 38%),
+    linear-gradient(180deg, #07070d, #020205 58%, #080610);
 }
 .lithos-hero {
   z-index: 1;
@@ -897,7 +906,7 @@ p { text-wrap: pretty; }
   .feature-copy > p { font-size: 18px; }
   .poster-selector button { flex-basis: 144px; min-height: 220px; }
   .archive-heading { align-items: flex-start; flex-direction: column; margin-top: 78px; }
-  .projects-drift-wall { height: 540px; margin-inline: -16px; border-right: 0; border-left: 0; border-radius: 0; }
+  .projects-drift-wall { height: auto; min-height: 0; margin-inline: -16px; border-right: 0; border-left: 0; border-radius: 0; }
   .poster-archive { display: flex; gap: 10px; margin-right: -16px; padding-right: 16px; padding-bottom: 18px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: thin; }
   .poster-archive button { flex: 0 0 46vw; scroll-snap-align: start; }
   .lightbox { padding: 16px; }
