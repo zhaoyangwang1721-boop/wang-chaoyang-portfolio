@@ -51,6 +51,7 @@ export const filmProjects = [
     result: "14.23亿",
     category: "国产文艺电影商业化标杆",
     image: assetUrl("images/filmography/poster_cn_14_fang_hua.jpg"),
+    thumbnail: assetUrl("images/filmography/thumbs/poster_cn_14_fang_hua.jpg"),
     summary: "以时代记忆与大众情绪建立传播共鸣，证明非强商业类型内容的破圈能力。"
   },
   {
@@ -60,6 +61,7 @@ export const filmProjects = [
     result: "12.99亿",
     category: "进口片本土化运营经典案例",
     image: assetUrl("images/filmography/poster_import_06_dangal.jpg"),
+    thumbnail: assetUrl("images/filmography/thumbs/poster_import_06_dangal.jpg"),
     summary: "完成跨文化内容的情绪翻译与口碑扩散，让圈层作品进入大众市场。"
   },
   {
@@ -69,6 +71,7 @@ export const filmProjects = [
     result: "23.21亿",
     category: "现象级爱情 IP 持续运营",
     image: assetUrl("images/filmography/poster_cn_11_qian_ren_3.jpg"),
+    thumbnail: assetUrl("images/filmography/thumbs/poster_cn_11_qian_ren_3.jpg"),
     summary: "围绕都市关系情绪持续经营内容资产，形成可延展、可累积的系列 IP。"
   },
   {
@@ -78,6 +81,7 @@ export const filmProjects = [
     result: "9.02亿",
     category: "社会文化议题传播范本",
     image: assetUrl("images/filmography/poster_cn_03_lao_pao_er.jpg"),
+    thumbnail: assetUrl("images/filmography/thumbs/poster_cn_03_lao_pao_er.jpg"),
     summary: "以人物精神和社会议题驱动讨论，完成话题破圈与口碑转化。"
   },
   {
@@ -87,6 +91,7 @@ export const filmProjects = [
     result: "重点项目",
     category: "作者电影市场传播",
     image: assetUrl("images/filmography/poster_cn_02_luo_man_di_ke_xiao_wang_shi.jpg"),
+    thumbnail: assetUrl("images/filmography/thumbs/poster_cn_02_luo_man_di_ke_xiao_wang_shi.jpg"),
     summary: "在电影美学与大众传播之间寻找准确表达，建立作品的独特市场识别。"
   },
   {
@@ -96,6 +101,7 @@ export const filmProjects = [
     result: "重点项目",
     category: "类型大片发行",
     image: assetUrl("images/filmography/poster_cn_08_di_ren_jie_shen_du_long_wang.jpg"),
+    thumbnail: assetUrl("images/filmography/thumbs/poster_cn_08_di_ren_jie_shen_du_long_wang.jpg"),
     summary: "围绕类型卖点、档期节奏与渠道协同，支撑头部商业项目全国落地。"
   }
 ];
@@ -121,7 +127,11 @@ export const posterArchive = [
   ["狂怒", "poster_import_04_fury.jpg"],
   ["大明猩", "poster_import_05_mr_go.jpg"],
   ["摔跤吧！爸爸", "poster_import_06_dangal.jpg"]
-].map(([title, file]) => ({ title, image: assetUrl(`images/filmography/${file}`) }));
+].map(([title, file]) => ({
+  title,
+  image: assetUrl(`images/filmography/${file}`),
+  thumbnail: assetUrl(`images/filmography/thumbs/${file}`)
+}));
 
 export const services = [
   {

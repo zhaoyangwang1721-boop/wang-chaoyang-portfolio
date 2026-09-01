@@ -518,7 +518,7 @@ function PosterLightbox({ index, onClose, onMove }) {
           <SpecularButton ref={closeButtonRef} className="lightbox-specular" size="sm" radius={999} autoAnimate={false} followMouse onClick={onClose}>关闭 <CloseIcon /></SpecularButton>
         </div>
         <div className="lightbox-media">
-          <img src={poster.image} alt={`${poster.title}原版电影海报大图`} width="960" height="1440" />
+          <img src={poster.image} alt={`${poster.title}原版电影海报大图`} width="960" height="1440" decoding="async" fetchPriority="high" />
         </div>
         <div className="lightbox-actions">
           <SpecularButton className="lightbox-specular" size="sm" radius={999} autoAnimate={false} followMouse onClick={() => onMove(-1)}><ArrowIcon direction="left" />上一张</SpecularButton>
@@ -732,7 +732,7 @@ function Projects({ isMobileLite }) {
           />
         </div>
         <div className="projects-accordion-gallery" data-reveal="media">
-          <AccordionGallery items={cleanFilmProjects} />
+          <AccordionGallery items={cleanFilmProjects} useThumbnails={isMobileLite} />
         </div>
         <div className="projects-drift-wall" data-reveal="collection">
           <DriftWall

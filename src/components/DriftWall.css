@@ -145,11 +145,22 @@
   height: 100%;
 }
 
-.drift-wall-static__tile img { object-fit: cover; object-position: center; }
-.drift-wall-static__placeholder { background: linear-gradient(135deg, #171421, #0a0910 60%, #20131b); }
+.drift-wall-static__tile img {
+  z-index: 1;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+.drift-wall-static__tile.is-loaded img { opacity: 1; }
+.drift-wall-static__placeholder {
+  background:
+    radial-gradient(circle at 30% 22%, rgba(126, 103, 182, .22), transparent 38%),
+    linear-gradient(135deg, #171421, #0a0910 60%, #20131b);
+}
 .drift-wall-static__label {
   position: absolute;
-  z-index: 1;
+  z-index: 2;
   right: 0;
   bottom: 0;
   left: 0;

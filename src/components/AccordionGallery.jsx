@@ -5,7 +5,8 @@ export default function AccordionGallery({
   items = [],
   initialIndex = 0,
   onItemSelect,
-  className = ""
+  className = "",
+  useThumbnails = false
 }) {
   const [activeIndex, setActiveIndex] = useState(Math.min(initialIndex, Math.max(0, items.length - 1)));
 
@@ -28,7 +29,15 @@ export default function AccordionGallery({
             onMouseEnter={() => selectItem(index)}
             onFocus={() => selectItem(index)}
           >
-            <img src={item.image} alt="" width="640" height="960" loading="lazy" />
+            <img
+              src={useThumbnails ? item.thumbnail ?? item.image : item.image}
+              alt=""
+              width="640"
+              height="960"
+              loading="lazy"
+              decoding="async"
+              fetchPriority={active ? "high" : "low"}
+            />
             <span className="accordion-gallery__shade" />
             <span className="accordion-gallery__index">{String(index + 1).padStart(2, "0")}</span>
             <span className="accordion-gallery__content">

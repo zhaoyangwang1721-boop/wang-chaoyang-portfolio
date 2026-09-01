@@ -1,12 +1,42 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import "./DriftWall.css";
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
 function StaticPosterTile({ item, index, onItemClick }) {
+  const tileRef = useRef(null);
+  const [shouldLoad, setShouldLoad] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const tile = tileRef.current;
+    if (!tile) return undefined;
+    if (!("IntersectionObserver" in window)) {
+      setShouldLoad(true);
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      setShouldLoad(true);
+      observer.disconnect();
+    }, { rootMargin: "280px 0px" });
+    observer.observe(tile);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <button className="drift-wall-static__tile" type="button" aria-label={`查看《${item.title}》项目海报`} onClick={(event) => onItemClick?.(item, index, event)}>
-      <img src={item.image} alt="" loading="lazy" decoding="async" />
+    <button ref={tileRef} className={`drift-wall-static__tile${isLoaded ? " is-loaded" : ""}`} type="button" aria-label={`查看《${item.title}》项目海报`} onClick={(event) => onItemClick?.(item, index, event)}>
+      <span className="drift-wall-static__placeholder" aria-hidden="true" />
+      {shouldLoad ? (
+        <img
+          src={item.thumbnail ?? item.image}
+          alt=""
+          decoding="async"
+          fetchPriority={index < 2 ? "high" : "auto"}
+          onLoad={() => setIsLoaded(true)}
+        />
+      ) : null}
       <span className="drift-wall-static__label">{item.title}</span>
     </button>
   );
