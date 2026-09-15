@@ -19,8 +19,8 @@ export const profile = {
   identity: "老舍文艺基金会 AI影视发展专项基金 主任",
   metrics: [
     { value: "15年", label: "影视发行营销经验" },
-    { value: "70+", label: "院线电影操盘" },
-    { value: "80亿+", label: "累计票房验证" },
+    { value: "50+", label: "院线电影作品" },
+    { value: "70亿+", label: "累计票房验证" },
     { value: "AI × FILM", label: "跨界增长方法" }
   ]
 };

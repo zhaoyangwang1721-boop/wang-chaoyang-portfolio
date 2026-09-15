@@ -8,3 +8,4 @@ agent_memory/
 .env
 .env.*
 !.env.example
+.dist-verify/
