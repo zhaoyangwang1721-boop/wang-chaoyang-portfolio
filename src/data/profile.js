@@ -133,25 +133,6 @@ export const posterArchive = [
   thumbnail: assetUrl(`images/filmography/thumbs/${file}`)
 }));
 
-export const services = [
-  {
-    title: "企业 AI 内容体系",
-    text: "从内容母题、脚本、分镜到 AI 视频生产与分发，建立稳定、可复用的内容工作流。"
-  },
-  {
-    title: "品牌传播与增长",
-    text: "围绕品牌升级、产品上市与年度传播，设计叙事主轴、传播节点和增长抓手。"
-  },
-  {
-    title: "创始人 IP 与线下 AIGC 培训班",
-    text: "把专业能力转化为可持续表达；以线下 AIGC 培训班，帮助企业团队与个人从业者掌握 AI 内容生产与营销工作流。"
-  },
-  {
-    title: "影视 / 文旅项目顾问",
-    text: "提供内容判断、发行策略、项目包装、资源协同和市场传播的实战支持。"
-  }
-];
-
 export const career = [
   {
     company: "老舍文艺基金会",
